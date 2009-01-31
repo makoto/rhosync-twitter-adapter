@@ -149,9 +149,9 @@ module Twitter
     def query
       log "Twitter query"
       log @source.url.inspect
-    
-      url = URI.parse('http://twitter.com')
-      res = Net::HTTP.start(url.host, url.port) {|http|
+
+      uri = URI.parse(@source.url)
+      res = Net::HTTP.start(uri.host, uri.port) {|http|
         http.get("/statuses/public_timeline.rss")
       }
       # @result = res.body    
