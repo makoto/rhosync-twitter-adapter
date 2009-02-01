@@ -42,6 +42,24 @@ module Twitter
         iterate_keys(:item => item, :item_id => item_id)
       end
     end
+    
+    def create(name_value_list)
+      url = "/statuses/update.json"
+      uri = URI.parse(@source.url+url)
+
+      name_value_list.each do |name_value|
+        value = name_value["value"] if name_value["name"]
+        
+        req = Net::HTTP::Post.new(uri.path, 'Accept' => 'application/xml')
+        req.basic_auth @source.login, @source.password
+
+        req.set_form_data('status'=> value)
+
+        res = Net::HTTP.start(uri.host,uri.port) do |http|
+          http.request(req)
+        end
+      end
+    end
       
   private
     def iterate_keys(option)
