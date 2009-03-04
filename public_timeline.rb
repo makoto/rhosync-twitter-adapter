@@ -471,12 +471,12 @@
 #     </status>
 #     </statuses>
 
-module Twitter
+# module Twitter
   class PublicTimeline < SourceAdapter
   
     include RestAPIHelpers
   
-    def initialize(source)
+    def initialize(source, credential = nil)
       super
     end
 
@@ -499,6 +499,17 @@ module Twitter
         iterate_keys(:item => item, :item_id => item_id)
       end
     end
+
+    # def sync
+    #   @result.each do |item|
+    #     item_id = item["id"].first.to_i
+    #     item.keys.each do |key|
+    #       value = item[key] ? item[key][0] : ""
+    #       add_triple(@source.id, id, key.gsub('-','_'), value)
+    #       # convert "-" to "_" because "-" is not valid in ruby variable names   
+    #     end
+    #   end
+    # end
       
   private
     def iterate_keys(option)
@@ -514,7 +525,8 @@ module Twitter
           iterate_keys(:prefix => (prefix + underline(key) + "_"), :item => value, :item_id => item_id)
         else
           # This method is from rest_api_helper
-          add_triple(@source.id, item_id, prefix + underline(key), value)
+          # add_triple(@source.id, item_id, prefix + underline(key), value)
+          add_triple(@source.id, item_id, prefix + underline(key), value,  @source.current_user.id)
         end
       end
     end
@@ -523,4 +535,4 @@ module Twitter
       key.gsub('-','_')
     end
   end
-end
+# end
