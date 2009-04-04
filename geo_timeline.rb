@@ -14,9 +14,12 @@ class GeoTimeline < SourceAdapter
     # raise "Please provide some code to perform an authenticated login to the backend application"
   end
   
-  def ask(question)
-    latitude, longitude = question.split(',')
-    range = "25km"
+  def ask(params)
+    p "question"
+    question = params["question"]
+    latitude, longitude, range = question.split(',')
+    # latitude = "40.714728", longitude ="-73.998672"
+    # range = "25km"
     url = "/search.json?geocode=#{latitude}%2C#{longitude}%2C#{range}"
   
     p "url"
@@ -26,8 +29,15 @@ class GeoTimeline < SourceAdapter
 
     # http://search.twitter.com/search.atom?geocode=-1067548169.0%2C-1067548169.0%2C25km
     res = Net::HTTP.get('search.twitter.com', url)
-  
+    # res = mock_response
     json_data = JSON.parse(res)
+    # data = [{
+    #   "text"=>"&quot;Click Click Boom!&quot; is on Sermonsdomain.com... Shout out to my dude Serm! Go Check it out!", "from_user"=>"ST0NES", 
+    #   "to_user_id"=>nil, "id"=>1362849296, "iso_language_code"=>"en", "from_user_id"=>4445710,
+    #   "source"=>"&lt;a href=&quot;http://twitterhelp.blogspot.com/2008/05/twitter-via-mobile-web-mtwittercom.html&quot;&gt;mobile web&lt;/a&gt;", 
+    #   "created_at"=>"Fri, 20 Mar 2009 21:43:59 +0000", "profile_image_url"=>"http://s3.amazonaws.com/twitter_production/profile_images/82402007/Stones_mean_muggin_clean_background_normal.jpg", "location"=>"Brooklyn, New York"
+    #   }]
+    
     data =  json_data["results"]
     p "data class #{data.class}"
     
@@ -38,6 +48,7 @@ class GeoTimeline < SourceAdapter
       item_id = item["id"]
       iterate_keys(:item => item, :item_id => item_id)
     end
+    
     # # return array of objects that correspond
     # result = [ 
     #   ObjectValue.new(:source_id=>@source.id, :object => header_id, 
@@ -65,6 +76,13 @@ class GeoTimeline < SourceAdapter
     # 
     # ]
     # p result
+    # debugger
+    # raise "a"
+    # require 'ruby-debug'
+    # debugger
+    # raise @data.inspect
+    p "@data.size"
+    p @data.size
     @data
   end
   
@@ -120,6 +138,11 @@ class GeoTimeline < SourceAdapter
     # no need to do a raise here
   end
 private
+
+def mock_response
+end
+
+
   def iterate_keys(option)
     item = option[:item]
     item_id = option[:item_id]
