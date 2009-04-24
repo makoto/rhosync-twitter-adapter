@@ -48,6 +48,9 @@ require 'httpclient'
     end
     
     def create(name_value_list, blob=nil)
+      p "Creating pic timeline..."
+      p "name_value_list: #{name_value_list.inspect}"
+      p "blob: #{blob.inspect}"
       # http://twitpic.com/api.do
       # - media (required) - Binary image data
       # - username (required) - Twitter username
