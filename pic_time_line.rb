@@ -1,5 +1,6 @@
 require 'rubygems'
-require 'httpclient'
+# require 'httpclient'
+require 'ruby-debug'
 
 #
 # Author: Makoto Inoue
@@ -51,20 +52,26 @@ require 'httpclient'
       p "Creating pic timeline..."
       p "name_value_list: #{name_value_list.inspect}"
       p "blob: #{blob.inspect}"
+
+      text = name_value_list.find{|n| n["name"] == "text"}["value"]
+      
       # http://twitpic.com/api.do
       # - media (required) - Binary image data
       # - username (required) - Twitter username
       # - password (required) - Twitter password
       # - message (optional) - Message to post to twitter. The URL of the image is automatically added.
       uri = URI.parse("http://twitpic.com/api/uploadAndPost")
-      get_params(name_value_list)
-
       boundary = "123456"
-      c = HTTPClient.new
-      open(blob.to_file) do |file|
-        postdata = { 'message'=> params['text'], 'username' => @source.login, 'password' => @source.password, 'media' => file }
-        puts c.post_content(uri.to_s, postdata)
+      http_client = HTTPClient.new
+      if blob
+        result = open(blob.path) do |f|
+          postdata = { 'message'=> text, 'username' => @source.login, 'password' => @source.password, 'media' => f }
+          puts http_client.post_content("http://twitpic.com/api/uploadAndPost", postdata, "content-type" => "multipart/form-data, boundary=#{boundary}")
+        end
+      else
+        p "blob is nil......"
       end
+      p "result ::: #{result.inspect}"
     end
       
   private
