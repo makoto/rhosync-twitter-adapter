@@ -1,5 +1,15 @@
   class BaseTimeline < SourceAdapter
   
+  def sync
+    query
+    @result = []
+    @nested_result.each_with_index do |item, key|
+      item_id = item["id"].first.to_i
+      iterate_keys(:item => item, :item_id => item_id, :row_num => key)
+    end
+    # log "#{self.class} sync, with #{@result.length} results"
+    super
+  end
       
   private
     def iterate_keys(option)
