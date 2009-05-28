@@ -7,6 +7,7 @@
 require 'uri'
 require 'xmlsimple'
 require 'net/http'
+require 'base_timeline'
 
   class Timeline < BaseTimeline
   
