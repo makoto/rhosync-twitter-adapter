@@ -17,4 +17,4 @@ Then, startup Rhosync locally, create new source, new source adapter, and
 * Source Name = Twitter Public TimeLine
 * Login/password (Not required for Public Timeline)
 * url = http://twitter.com
-* Source Adapter Class = Twitter::PublicTimeline
+* Source Adapter Class = PublicTimeline
